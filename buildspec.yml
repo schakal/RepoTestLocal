@@ -1,0 +1,20 @@
+version: 0.2
+
+
+phases:
+  install:
+    commands:
+        -bundle install
+  pre_build:
+    commands:
+        - service postgresql start
+        - export DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL=true
+        -sport RAILS_ENV=test
+  build: scripts/install_dependencies
+    commands:
+        - bundle exec rake db:create
+        - bundle exec rake db:schema:load
+        - bundle exec rake db:migrate
+  post_build: 
+    commands:
+        - bundle exec rspec
